@@ -9,3 +9,20 @@ project:
   top_module: "tt_um_hydrastro_pyrilascon"
   source_files:
     - "project.v"
+
+# The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
+# This section is for the datasheet/website. Use descriptive names (e.g., RX, TX, MOSI, SCL, SEG_A, etc.).
+pinout:
+ module tt_um_hydrastro_pyrilascon (
+     input  wire [7:0] ui_in,    // command/data input
+     output wire [7:0] uo_out,   // data/status output
+     input  wire [7:0] uio_in,   // auxiliary input pins
+     output wire [7:0] uio_out,  // auxiliary output pins
+     output wire [7:0] uio_oe,   // 1=output, 0=input
+     input  wire       ena,
+     input  wire       clk,
+     input  wire       rst_n
+ );
+
+# Do not change!
+yaml_version: 6
