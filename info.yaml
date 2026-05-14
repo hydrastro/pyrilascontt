@@ -3,26 +3,47 @@ project:
   author: "hydrastro"
   discord: ""
   description: "TinyTapeout-oriented Ascon-AEAD128 serial ASIC core"
-  language: "Verilog"
+  language: "SystemVerilog"
   clock_hz: 10000000
   tiles: "6x2"
   top_module: "tt_um_hydrastro_pyrilascon"
   source_files:
     - "project.v"
+    - "ascon/generated/ascon_..._control.sv"
+    - "ascon/generated/ascon_..._decrypt_plaintext_buffer.sv"
+    - "ascon/generated/ascon_..._engine.sv"
+    - "ascon/generated/ascon_..._padding.sv"
+    - "ascon/generated/ascon_..._permutation.sv"
+    - "ascon/generated/ascon_..._security.sv"
+    - "ascon/generated/ascon_..._state_context.sv"
+    - "ascon/generated/ascon_..._top.sv"
 
-# The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
-# This section is for the datasheet/website. Use descriptive names (e.g., RX, TX, MOSI, SCL, SEG_A, etc.).
 pinout:
- module tt_um_hydrastro_pyrilascon (
-     input  wire [7:0] ui_in,    // command/data input
-     output wire [7:0] uo_out,   // data/status output
-     input  wire [7:0] uio_in,   // auxiliary input pins
-     output wire [7:0] uio_out,  // auxiliary output pins
-     output wire [7:0] uio_oe,   // 1=output, 0=input
-     input  wire       ena,
-     input  wire       clk,
-     input  wire       rst_n
- );
+  ui[0]: "in_byte[0]"
+  ui[1]: "in_byte[1]"
+  ui[2]: "in_byte[2]"
+  ui[3]: "in_byte[3]"
+  ui[4]: "in_byte[4]"
+  ui[5]: "in_byte[5]"
+  ui[6]: "in_byte[6]"
+  ui[7]: "start / in_byte[7]"
 
-# Do not change!
+  uo[0]: "out_byte[0]"
+  uo[1]: "out_byte[1]"
+  uo[2]: "out_byte[2]"
+  uo[3]: "out_byte[3]"
+  uo[4]: "out_byte[4]"
+  uo[5]: "out_byte[5]"
+  uo[6]: "out_byte[6]"
+  uo[7]: "out_byte[7]"
+
+  uio[0]: "ready"
+  uio[1]: "done"
+  uio[2]: "status/reserved"
+  uio[3]: "status/reserved"
+  uio[4]: "status/reserved"
+  uio[5]: "status/reserved"
+  uio[6]: "status/reserved"
+  uio[7]: "status/reserved"
+
 yaml_version: 6

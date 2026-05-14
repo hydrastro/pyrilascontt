@@ -5,17 +5,17 @@
 
 `default_nettype none
 
-module tt_um_hydrastro_pyrilascon (
-    input  wire [7:0] ui_in,    // command/data input
-    output wire [7:0] uo_out,   // data/status output
-    input  wire [7:0] uio_in,   // auxiliary input pins
-    output wire [7:0] uio_out,  // auxiliary output pins
-    output wire [7:0] uio_oe,   // 1=output, 0=input
-    input  wire       ena,
-    input  wire       clk,
-    input  wire       rst_n
+ascon_asic_shared_datapath_aead128_16_bit_one_round_per_cycle_single_core_single_320_register_hardcoded_fsm_rtl_performed_asic_rand_counter_consttime_tag_top #(
+    .DATA_BUS_BITS(16)
+) u_ascon_core (
+    .clk(clk),
+    .rst_n(rst_n),
+    .start_i(core_start),
+    .data_i(core_data_i),
+    .data_o(core_data_o),
+    .ready_o(core_ready),
+    .done_o(core_done)
 );
-
     /*
      * Temporary TT shell.
      *
