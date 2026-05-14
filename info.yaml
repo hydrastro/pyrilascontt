@@ -5,7 +5,7 @@ project:
   description: "TinyTapeout-oriented Ascon-AEAD128 serial ASIC core"
   language: "SystemVerilog"
   clock_hz: 10000000
-  tiles: "4x4"
+  tiles: "6x2"
   top_module: "tt_um_hydrastro_pyrilascon"
   source_files:
     - "project.v"
