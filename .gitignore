@@ -21,3 +21,9 @@ backup/
 *.fst
 sim_build/
 __pycache__/
+
+backup/
+*.vcd
+*.fst
+sim_build/
+__pycache__/
