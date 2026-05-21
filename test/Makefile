@@ -1,40 +1,33 @@
-# TinyTapeout cocotb simulation Makefile
+# SPDX-License-Identifier: Apache-2.0
 
 SIM ?= icarus
-FST ?= -fst
 TOPLEVEL_LANG ?= verilog
-SRC_DIR = $(PWD)/../src
 
-PROJECT_SOURCES = \
-  ascon/tt_ascon_ctrl.sv \
-  ascon/tt_ascon_state.sv \
-  ascon/tt_ascon_perm.sv \
-  ascon/tt_ascon_engine.sv \
-  ascon/tt_ascon_pad.sv \
-  ascon/tt_ascon_sec.sv \
-  ascon/tt_ascon_ptbuf.sv \
-  ascon/tt_ascon_core.sv \
-  project.v
+PWD := $(shell pwd)
+REPO_ROOT := $(abspath $(PWD)/..)
 
-ifneq ($(GATES),yes)
-SIM_BUILD = sim_build/rtl
-VERILOG_SOURCES += $(addprefix $(SRC_DIR)/,$(PROJECT_SOURCES))
-else
-SIM_BUILD = sim_build/gl
-COMPILE_ARGS += -DGL_TEST
-COMPILE_ARGS += -DFUNCTIONAL
-COMPILE_ARGS += -DUSE_POWER_PINS
-COMPILE_ARGS += -DSIM
-COMPILE_ARGS += -DUNIT_DELAY=\#1
-VERILOG_SOURCES += $(PDK_ROOT)/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/verilog/primitives.v
-VERILOG_SOURCES += $(PDK_ROOT)/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/verilog/gf180mcu_fd_sc_mcu7t5v0.v
-VERILOG_SOURCES += $(PWD)/gate_level_netlist.v
-endif
+TOPLEVEL = tt_um_hydrastro_pyrilascon
+MODULE = test
 
-COMPILE_ARGS += -g2012
-COMPILE_ARGS += -I$(SRC_DIR)
-VERILOG_SOURCES += $(PWD)/tb.v
-TOPLEVEL = tb
-COCOTB_TEST_MODULES = test
+VERILOG_SOURCES = \
+	$(REPO_ROOT)/src/project.v \
+	$(REPO_ROOT)/src/ascon/tt_ascon_sbox5.sv \
+	$(REPO_ROOT)/src/ascon/tt_ascon_perm.sv \
+	$(REPO_ROOT)/src/ascon/tt_ascon_pad.sv \
+	$(REPO_ROOT)/src/ascon/tt_ascon_core.sv
+
+COMPILE_ARGS += -Wall -g2012
+
+COCOTB_RESULTS_FILE ?= $(PWD)/results.xml
+export COCOTB_RESULTS_FILE
+
+.PHONY: results.xml
+results.xml: sim
+	@test -f results.xml || { \
+	  echo '<?xml version="1.0" encoding="UTF-8"?>' > results.xml; \
+	  echo '<testsuite name="fallback" tests="1" failures="1" errors="0" skipped="0">' >> results.xml; \
+	  echo '<testcase classname="ci" name="missing-cocotb-results"><failure message="cocotb did not create results.xml"/></testcase>' >> results.xml; \
+	  echo '</testsuite>' >> results.xml; \
+	}
 
 include $(shell cocotb-config --makefiles)/Makefile.sim

@@ -2,21 +2,17 @@ project:
   title: "PyrilAscon AEAD128 TinyTapeout"
   author: "hydrastro"
   discord: ""
-  description: "TinyTapeout-oriented Ascon-AEAD128 serial ASIC core"
+  description: "Minimum-area TinyTapeout ASCON-AEAD128 core: single 320-bit state, 5-bit column-serial permutation, hardcoded FSM, no side-channel/fault extras"
   language: "SystemVerilog"
   clock_hz: 10000000
   tiles: "4x4"
   top_module: "tt_um_hydrastro_pyrilascon"
   source_files:
     - "project.v"
-    - "ascon/tt_ascon_ctrl.sv"
-    - "ascon/tt_ascon_state.sv"
-    - "ascon/tt_ascon_perm.sv"
-    - "ascon/tt_ascon_engine.sv"
-    - "ascon/tt_ascon_pad.sv"
-    - "ascon/tt_ascon_sec.sv"
-    - "ascon/tt_ascon_ptbuf.sv"
     - "ascon/tt_ascon_core.sv"
+    - "ascon/tt_ascon_perm.sv"
+    - "ascon/tt_ascon_sbox5.sv"
+    - "ascon/tt_ascon_pad.sv"
 
 pinout:
   ui[0]: "data_in[0]"
@@ -26,7 +22,7 @@ pinout:
   ui[4]: "data_in[4]"
   ui[5]: "data_in[5]"
   ui[6]: "data_in[6]"
-  ui[7]: "start/data_in[7]"
+  ui[7]: "data_in[7]"
 
   uo[0]: "data_out[0]"
   uo[1]: "data_out[1]"
@@ -39,11 +35,11 @@ pinout:
 
   uio[0]: "ready"
   uio[1]: "done"
-  uio[2]: "data_hi[0]"
-  uio[3]: "data_hi[1]"
-  uio[4]: "data_hi[2]"
-  uio[5]: "data_hi[3]"
-  uio[6]: "data_hi[4]"
-  uio[7]: "data_hi[5]"
+  uio[2]: "tag_ok"
+  uio[3]: "busy"
+  uio[4]: "cmd[0]"
+  uio[5]: "cmd[1]"
+  uio[6]: "cmd[2]"
+  uio[7]: "cmd[3]"
 
 yaml_version: 6
