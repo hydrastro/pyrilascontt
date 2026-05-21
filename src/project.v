@@ -16,34 +16,38 @@ module tt_um_hydrastro_pyrilascon (
     input  wire       rst_n
 );
 
-    wire        core_start;
-    wire [15:0] core_data_i;
-    wire [15:0] core_data_o;
-    wire        core_ready;
-    wire        core_done;
+  wire [7:0] data_i;
+  wire [3:0] cmd_i;
+  wire       strobe_i;
 
-    // Temporary compact TT bridge.
-    // ui_in[7] is start; ui_in[6:0] plus uio_in form a 16-bit payload.
-    assign core_start = ena & ui_in[7];
-    assign core_data_i = {uio_in, ui_in};
+  wire [7:0] data_o;
+  wire       ready;
+  wire       done;
+  wire       tag_ok;
+  wire       busy;
 
-    tt_ascon_core #(
-        .DATA_BUS_BITS(16)
-    ) u_ascon_core (
-        .clk(clk),
-        .rst_n(rst_n),
-        .start_i(core_start),
-        .data_i(core_data_i),
-        .data_o(core_data_o),
-        .ready_o(core_ready),
-        .done_o(core_done)
-    );
+  assign data_i   = ui_in;
+  assign cmd_i    = uio_in[7:4];
+  assign strobe_i = ena & (cmd_i != 4'h0);
 
-    assign uo_out  = core_data_o[7:0];
-    assign uio_out = {6'b0, core_done, core_ready};
-    assign uio_oe  = 8'h03; // uio[0]=ready, uio[1]=done are outputs
+  tt_ascon_core u_core (
+    .clk      (clk),
+    .rst_n    (rst_n),
+    .strobe_i (strobe_i),
+    .cmd_i    (cmd_i),
+    .data_i   (data_i),
+    .data_o   (data_o),
+    .ready_o  (ready),
+    .done_o   (done),
+    .tag_ok_o (tag_ok),
+    .busy_o   (busy)
+  );
 
-    wire _unused = &{core_data_o[15:8], 1'b0};
+  assign uo_out  = data_o;
+
+  // uio[3:0] are outputs, uio[7:4] are command inputs.
+  assign uio_out = {4'b0000, busy, tag_ok, done, ready};
+  assign uio_oe  = 8'h0f;
 
 endmodule
 
