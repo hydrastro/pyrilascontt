@@ -5,7 +5,7 @@ project:
   description: "Minimum-area TinyTapeout ASCON-AEAD128 core: single 320-bit state, 5-bit column-serial permutation, hardcoded FSM, no side-channel/fault extras"
   language: "SystemVerilog"
   clock_hz: 10000000
-  tiles: "4x4"
+  tiles: "3x2"
   top_module: "tt_um_hydrastro_pyrilascon"
   source_files:
     - "project.v"
